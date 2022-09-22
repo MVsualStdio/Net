@@ -4,6 +4,6 @@ client
 build
 C++
 .vscode
-.jsoncpp
 commend.cc
 includeNet.hpp
+jsoncpp

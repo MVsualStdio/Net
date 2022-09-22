@@ -14,7 +14,7 @@ Connectserver::Connectserver(int fd,std::shared_ptr<Epoll> epoller):
 void Connectserver::Coninit(){
         channel->setCallBack(shared_from_this());
         epoll_event ev;
-        channel->setReEvent(EPOLLIN);
+        channel->setEvent(EPOLLIN);
         epoll->addFd(channel);
 }
 
@@ -50,7 +50,7 @@ void Connectserver::serverWrite(){
 void Connectserver::serverRead(){
     int length = buffer.readConnect(this);
     if(length){
-        channel->setReEvent(EPOLLIN | EPOLLOUT);
+        channel->setEvent(EPOLLIN | EPOLLOUT);
         epoll->modFd(channel);
     }   
     else{

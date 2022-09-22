@@ -24,13 +24,13 @@ void Channel::setCallBack(std::shared_ptr<ServerIO> serverio){
 }
 
 void Channel::ChannelCallback(){
-    if(reevent & EPOLLIN){
+    if(event & EPOLLIN){
         serverio->serverRead();
     }
-    if(reevent & EPOLLOUT){
+    if(event & EPOLLOUT){
         serverio->serverWrite();
     }
-    if(reevent & (EPOLLRDHUP | EPOLLHUP | EPOLLERR)){
+    if(event & (EPOLLRDHUP | EPOLLHUP | EPOLLERR)){
         //serverio->serverClose();
     }
 }

@@ -31,7 +31,7 @@ bool Epoll::addFd(Channel* channel){
     }
     epoll_event ev = {0};
     ev.data.fd = fd;
-    ev.events = channel->getReEvent();
+    ev.events = channel->getEvent();
     ev.data.ptr = channel;
     return epoll_ctl(_eventFd,EPOLL_CTL_ADD,fd,&ev) == 0;
 }
@@ -52,7 +52,7 @@ void Epoll::wait(std::vector<Channel*>& channels,int time){
             int fd = cur_event.data.fd;
             Channel* cur_chan =  (Channel*)cur_event.data.ptr;
             if (cur_chan) {
-                cur_chan->setReEvent(cur_event.events);
+                cur_chan->setEvent(cur_event.events);
                 channels.emplace_back(cur_chan);
             } 
             else {

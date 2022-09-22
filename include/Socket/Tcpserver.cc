@@ -12,7 +12,7 @@ Tcpserver::Tcpserver(std::shared_ptr<Epoll> epoller):
 void Tcpserver::Tcpinit(){
         channel->setCallBack(shared_from_this());
         epoll_event ev;
-        channel->setReEvent(EPOLLIN);
+        channel->setEvent(EPOLLIN);
         epoll->addFd(channel);
 }
 

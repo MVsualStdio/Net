@@ -8,6 +8,6 @@ MESSAGE(STATUS "build start")
 include_directories(include)
 
 add_subdirectory(include)
-set(NET_LIB LOGGER THREADPOOL MYSOCKET BUFFER)
+set(NET_LIB LOGGER THREADPOOL MYSOCKET BUFFER HTTP)
 add_subdirectory(test)
 

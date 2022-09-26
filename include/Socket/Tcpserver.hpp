@@ -15,7 +15,7 @@
 #include "./Connectserver.hpp"
 #include "unordered_map"
 #include <mutex>
-
+#include "IMuduoUser.hpp"
 namespace Net{
     class Tcpserver : public ServerIO{
         #define MAX_EVENTS 500
@@ -26,19 +26,19 @@ namespace Net{
         #define EPOLL_ERROR -11
 
         public:
-            Tcpserver(std::shared_ptr<Epoll> epoll);
+            Tcpserver(std::shared_ptr<Epolloop> eloop);
             void Tcpinit();
             ~Tcpserver();
-            void start();
             void serverRead();
             void serverWrite();
+            void setUser(IMuduoUser* _user){user = _user;};
         private:
             std::unordered_map<int,std::shared_ptr<Connectserver>> conList;
             int createSocket();
             int socketfd;
-            std::shared_ptr<Epoll> epoll;
+            std::shared_ptr<Epolloop> loop;
             Net::Channel* channel; 
-
+            IMuduoUser* user; 
     };
 }
 

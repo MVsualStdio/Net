@@ -7,8 +7,8 @@
 #include <string.h>
 #include<exception>
 #include<stdexcept>
-
-
+#include <algorithm>
+#include <iostream>
 
 
 namespace Net
@@ -22,21 +22,29 @@ namespace Net
             int capacity;
             int maxCapacity;
             int dataSize;
+            static const char kCRLF[];
         public:
-            Buffer(int capacit=8,int maxCapacit=1024):readPos(0),writePos(0),\
+            Buffer(int capacit=8,int maxCapacit=4096):readPos(0),writePos(0),\
                                 capacity(capacit),maxCapacity(maxCapacit),dataSize(capacity+1){
                 buffer = new char[dataSize];
             };
             ~Buffer(){
                 delete buffer;
             }
+            const char* peek() const{ return buffer+readPos;}
+            void retrieve(int len);
+            void retrieveUntil(const char* newRead);
             int getUnreadSize();
             int getFreeSize();
             int read(char* data,int length);
+            void append(std::string s);
             int writeBuffer(const char *data,int length);
             int writeConnect(Connectserver* con);
+            int writeConnect(Connectserver* con,std::string msg);
             int readConnect(Connectserver* con);
             void clean();
+            const char* findCRLF() const;
+        
         private:
             void ensureInsert(int length);
             void resize(int newcap);

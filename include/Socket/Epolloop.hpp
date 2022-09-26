@@ -10,7 +10,8 @@ namespace Net{
             std::shared_ptr<Epoll> epoll;
         public:
             void loop();
-            Epolloop(std::shared_ptr<Epoll> epoll);
+            Epolloop();
+            void update(Channel* channel);
             //void addFd(Channel& Channel);
     };
 

@@ -3,17 +3,15 @@
 
 using namespace Net;
 
-Tcpserver::Tcpserver(std::shared_ptr<Epoll> epoller):
-    socketfd(createSocket()),epoll(epoller){
-        channel = new Channel(socketfd);
+Tcpserver::Tcpserver(std::shared_ptr<Epolloop> eloop):
+    socketfd(createSocket()),loop(eloop){
+        channel = new Channel(loop,socketfd);
     }
 
 
 void Tcpserver::Tcpinit(){
         channel->setCallBack(shared_from_this());
-        epoll_event ev;
-        channel->setEvent(EPOLLIN);
-        epoll->addFd(channel);
+        channel->enableReading();
 }
 
 
@@ -23,14 +21,6 @@ Tcpserver::~Tcpserver(){
 }
 
 
-
-void Tcpserver::start(){
-    // while(1){
-    //     std::vector<std::shared_ptr<Net::Channel>> channel;
-
-
-    // }
-}
 
 void Tcpserver::serverWrite(){
     std::cout<<"tcpwrite"<<std::endl;
@@ -52,8 +42,10 @@ void Tcpserver::serverRead(){
         LogDebug(Net::Logger::MESSAGE) <<  "accept error, errno" << errno;
     }
     fcntl(conn_fd, F_SETFL, O_NONBLOCK);
-    conList[conn_fd] = std::shared_ptr<Connectserver>(new Connectserver(conn_fd,epoll));
+    conList[conn_fd] = std::shared_ptr<Connectserver>(new Connectserver(conn_fd,loop));
     conList[conn_fd]->Coninit();
+    conList[conn_fd]->setUser(user);
+    conList[conn_fd]->connectEstablished();
 }
 
 

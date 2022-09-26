@@ -89,3 +89,14 @@ int Epoll::GetEventFd(size_t i) const{
 uint32_t Epoll::GetEvents(size_t i) const{
     return _events[i].events;
 }
+
+void Epoll::update(Channel* channel){
+    int index = channel->getIndex();
+    if(index == -1){
+        channel->setIndex(1);
+        addFd(channel);
+    }
+    else{
+        modFd(channel);
+    }
+}

@@ -23,6 +23,7 @@ namespace Net{
             bool addFd(Channel* channel);
             bool modFd(Channel* channel);
             bool delFd(Channel* channel);
+            void update(Channel* channel);
             void wait(std::vector<Channel*>& channels,int time = -1);
             int GetEventFd(size_t i) const;
             uint32_t GetEvents(size_t i) const;

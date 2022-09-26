@@ -2,6 +2,7 @@
 #include "../Socket/Connectserver.hpp"
 
 using namespace Net;
+const char Buffer::kCRLF[] = "\r\n";
 
 void Buffer::ensureInsert(int length){
     if (getFreeSize() >= length) {
@@ -41,7 +42,7 @@ void Buffer::resize(int newcap){
     }
 
 
-    char* temp = new char[newcap];
+    char* temp = new char[newcap+1];
     for (int i = 0; i < unread_size; i++) {
         int cur_index = (readPos + i) % capacity;
         memcpy(temp + i, buffer + cur_index, 1);
@@ -55,7 +56,7 @@ void Buffer::resize(int newcap){
 }
 
 int Buffer::getUnreadSize(){
-    if(readPos >= writePos){
+    if(readPos <= writePos){
         return writePos - readPos;
     }
     return dataSize - readPos + writePos;
@@ -89,6 +90,7 @@ int Buffer::writeBuffer(const char* data,int length){
         curIndex = (writePos + i) % dataSize;
         memcpy(buffer + curIndex,data + i, 1);
     }
+
     writePos = (curIndex+1)%dataSize;
     return length;
 }
@@ -114,6 +116,12 @@ int Buffer::writeConnect(Connectserver* con){
         total_sent_num += writeNum;
   }
   return total_sent_num;
+}
+
+int Buffer::writeConnect(Connectserver* con,std::string msg){
+    int fd = con->getFd();
+    size_t writeNum = ::write(fd, msg.c_str(), msg.length());
+    return writeNum;
 }
 
 int Buffer::readConnect(Connectserver* con){
@@ -143,4 +151,27 @@ int Buffer::readConnect(Connectserver* con){
 void Buffer::clean(){
     readPos = 0;
     writePos = 0;
+}
+
+void Buffer::append(std::string data){
+    writeBuffer(data.c_str(),data.size());
+}
+
+const char* Buffer::findCRLF() const{
+    const char* crlf = std::search(buffer+readPos, buffer+writePos, kCRLF, kCRLF+2);
+    return crlf == buffer+writePos ? NULL : crlf;
+}
+
+void Buffer::retrieve(int len){
+    if(len > getUnreadSize()){
+        std::cout<<"retrieve len is error"<<std::endl;
+        return;
+    }
+    int curIndex = readPos;
+    readPos = (curIndex+len)%dataSize;
+}
+
+void Buffer::retrieveUntil(const char* newRead){
+    int len = newRead - peek();
+    retrieve(len);
 }

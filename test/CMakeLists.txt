@@ -4,7 +4,7 @@ foreach(test ${DIR_SRC_LIST})
     MESSAGE(STATUS ${test})
 endforeach()
 
-set(TSET_LIB testThread testSocket testLogger)
+set(TSET_LIB testThread testSocket testLogger testHttp)
 
 foreach(test ${TSET_LIB})
     message("Lib build: ${test}")

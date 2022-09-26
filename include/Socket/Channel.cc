@@ -1,13 +1,14 @@
 
 #include "Channel.hpp"
-
+#include "Epolloop.hpp"
 
 using namespace Net;
 
-Channel::Channel(int socket){
-    
+Channel::Channel(std::shared_ptr<Epolloop> eloop,int socket){
+    loop = eloop;
     event = 0;
     socket_fd =  socket;
+    index = -1;
 }
 
 void Channel::setEvent(uint32_t epoll_event){
@@ -46,4 +47,8 @@ uint32_t Channel::getEvent() const {
 
 uint32_t Channel::getReEvent() const {
     return reevent;
+}
+
+void Channel::update(){
+    loop->update(this);
 }

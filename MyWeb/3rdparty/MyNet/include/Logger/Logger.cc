@@ -75,7 +75,7 @@ void Logger::writeThread(){
             os.close();
             string file = "./Log/"+ts+".log";
             os.open(file,ios::out|ios::app);
-            currenLogNum = 0;6
+            currenLogNum = 0;
         }
         sleep(2);
     }

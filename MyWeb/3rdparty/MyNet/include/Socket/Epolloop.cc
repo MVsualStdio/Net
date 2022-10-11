@@ -21,6 +21,7 @@ void Epolloop::loop(){
         epoll->wait(channels);
         for(Net::Channel* c : channels){
             c->ChannelCallback();
+            //std::cout<<std::this_thread::get_id()<<std::endl;
         }
     }
 }

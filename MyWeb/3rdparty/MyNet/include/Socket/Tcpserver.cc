@@ -8,13 +8,15 @@ Tcpserver::Tcpserver(std::shared_ptr<Epolloop> eloop):
         socketfd = createSocket();
         channel = new Channel(loop,socketfd);
         user = nullptr;
+        conloop = std::make_shared<Epolloop>();
     }
 
 
 
 void Tcpserver::Tcpinit(){
-        channel->setCallBack(this);
-        channel->enableReading();
+    channel->setCallBack(this);
+    channel->enableReading();
+    loopThread = std::move(std::thread(&Epolloop::loop,conloop));
 }
 
 
@@ -41,7 +43,7 @@ void Tcpserver::serverRead(){
                     << " accepted, Socket ID: "
                     << conn_fd;
         fcntl(conn_fd, F_SETFL, O_NONBLOCK);
-        conList[conn_fd] = std::shared_ptr<Connectserver>(new Connectserver(conn_fd,loop));
+        conList[conn_fd] = std::shared_ptr<Connectserver>(new Connectserver(conn_fd,conloop));
         conList[conn_fd]->Coninit();
         conList[conn_fd]->setUser(user);
         conList[conn_fd]->connectEstablished(); 

@@ -47,6 +47,7 @@ bool Epoll::addFd(Channel* channel){
 
 void Epoll::wait(std::vector<Channel*>& channels,int time){
     int count = epoll_wait(_eventFd,&_events[0],static_cast<int>(_events.size()),time);
+    
         for (int i = 0; i < count; i++) {
             epoll_event cur_event = _events[i];
             int fd = cur_event.data.fd;
@@ -72,7 +73,7 @@ bool Epoll::delFd(Channel* channel){
     return 0 == epoll_ctl(_eventFd, EPOLL_CTL_DEL, fd, &ev);
 }
 
-bool Epoll::modFd(Channel* channel) {
+bool Epoll::modFd(Channel* channel){
     int fd = channel->getFd();
     if(fd < 0) {
         return false;

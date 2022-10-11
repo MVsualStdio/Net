@@ -34,13 +34,15 @@ namespace Net{
             void serverClose(){};
             void setUser(IMuduoUser* _user){user = _user;};
         private:
+            std::shared_ptr<Epolloop> conloop;
+            std::thread loopThread;
             std::unordered_map<int,std::shared_ptr<Connectserver>> conList;
             int createSocket();
             int socketfd;
             std::shared_ptr<Epolloop> loop;
             Net::Channel* channel; 
             IMuduoUser* user; 
-           // static std::thread::id mainThreadId;
+            // static std::thread::id mainThreadId;
     };
 }
 

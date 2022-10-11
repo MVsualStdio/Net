@@ -32,7 +32,8 @@ void Channel::ChannelCallback(){
         serverio->serverWrite();
     }
     if(reevent & (EPOLLRDHUP | EPOLLHUP | EPOLLERR)){
-        //serverio->serverClose();
+        serverio->serverClose();
+        
     }
 }
 

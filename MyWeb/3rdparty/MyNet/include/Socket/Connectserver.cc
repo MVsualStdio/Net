@@ -54,6 +54,6 @@ void Connectserver::serverRead(){
         }
     }   
     else{
-       //serverClose();
+       serverClose();
     }
 }

@@ -9,8 +9,7 @@
 namespace Net{
     class HttpServer:public Net::IMuduoUser{
         public:
-            using  HttpCallback = std::function<void (const HttpRequest&,
-                              HttpResponse*)>;
+            using  HttpCallback = std::function<std::shared_ptr<Net::HttpResponse> (const HttpRequest&)>;
 
         private:
             std::shared_ptr<Net::Tcpserver> tcp_;

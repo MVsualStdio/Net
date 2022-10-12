@@ -42,17 +42,17 @@ void HttpServer::onMessage(Connectserver* pCon, Buffer* pBuf){
 }
 
 void HttpServer::onRequest(Connectserver* pCon, const HttpRequest& req){
-    const std::string& connection = req.getHeader("Connection");
-    bool close = connection == "close" ||
-        (req.getVersion() == HttpRequest::kHttp10 && connection != "Keep-Alive");
-    HttpResponse response(close);
-    httpCallback_(req, &response);
-    Buffer buf;
-    response.toBuffer(&buf);
-    buf.writeConnect(pCon);
-    if (response.closeConnection()){
-        pCon->serverClose();
+
+    std::shared_ptr<Net::HttpResponse> response =  httpCallback_(req);
+    if(response){
+        Buffer buf;
+        response->toBuffer(&buf);
+        buf.writeConnect(pCon);
+        if (response->closeConnection()){
+            pCon->serverClose();
+        }
     }
+
 }
 
 void HttpServer::loop(){

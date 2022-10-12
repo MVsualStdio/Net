@@ -27,6 +27,6 @@ using namespace Net;
 
 int main(){
     WebSever web;
-    web.addRoute("/",Response([](HttpResponse* resp){Render::SendHtml("login.html",resp);}));
+    web.addRoute("/",Response([](HttpRequest& resp){return Render::SendHtml("login.html");}));
     web.start();
 }

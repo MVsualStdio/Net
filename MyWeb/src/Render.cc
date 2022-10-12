@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+
 using namespace Net;
 using namespace web;
 
@@ -47,7 +48,8 @@ size_t web::Render::pathLen_ = 0;
 
 
 
-void Render::SendHtml(string path,Net::HttpResponse* resp){
+std::shared_ptr<Net::HttpResponse> Render::SendHtml(string path){
+    std::shared_ptr<Net::HttpResponse> resp(new Net::HttpResponse(true));
     path_ = path;
     auto pos = path_.find('.');
     if(pos != path_.length()){
@@ -66,6 +68,7 @@ void Render::SendHtml(string path,Net::HttpResponse* resp){
     setResp(resp);
     close(filefd_);
     UnmapFile();
+    return resp;
 }
 
 void Render::UnmapFile() {
@@ -107,7 +110,7 @@ void Render::getPath(string& path){
     }
 }
 
-void Render::setResp(Net::HttpResponse* resp){
+void Render::setResp(std::shared_ptr<Net::HttpResponse> resp){
     if(filefd_>0){
         resp->setStatusCode(HttpResponse::K200Ok);
         resp->setStatusMessage("OK");

@@ -19,19 +19,25 @@ namespace web{
     class WebSever{
         public:
         private:
-            void onRequest(const HttpRequest& req, HttpResponse* resp){
+            std::shared_ptr<Net::HttpResponse> onRequest(const HttpRequest& req){
                 string path = req.path();
                 if(Route::isExistRoute(path)){
                     Response s =  Route::getResponse(path);
-                    s.ResRun(resp);
+                    const std::string& connection = req.getHeader("Connection");
+                    bool close = connection == "close" ||
+                        (req.getVersion() == HttpRequest::kHttp10 && connection != "Keep-Alive");
+                    std::shared_ptr<Net::HttpResponse> Newresp =  s.ResRun(req);
+                    Newresp->setCloseConnect(close);
+                    return Newresp;
                 }
+                return nullptr;
             }
         public:
             WebSever() = default;
             void start(){
                 std::shared_ptr<Net::Epolloop> loop(new Net::Epolloop());
                 Net::HttpServer server(loop);
-                server.setHttpCallback(std::bind(&WebSever::onRequest,this,std::placeholders::_1,std::placeholders::_2));
+                server.setHttpCallback(std::bind(&WebSever::onRequest,this,std::placeholders::_1));
                 server.start();
                 server.loop();
             }

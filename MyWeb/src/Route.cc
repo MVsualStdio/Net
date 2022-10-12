@@ -49,7 +49,7 @@ void Route::addStaticSource(string type){
     std::vector<std::string> files;
     if(getAllFiles("./static/"+type,files)){
         for(auto& file:files){
-            addRoute("/"+file,Response([file](Net::HttpResponse* resp){Render::SendHtml(file,resp);}));
+            addRoute("/"+file,Response([file](Net::HttpRequest resp){return Render::SendHtml(file);}));
         }
     }
 }

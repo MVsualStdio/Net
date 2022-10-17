@@ -38,6 +38,8 @@ void Connectserver::serverClose(){
 
 void Connectserver::serverWrite(){
     buffer.writeConnect(this);  
+    channel->setEvent(EPOLLONESHOT | EPOLLRDHUP);
+    channel->enableReading();
     channel->disableWriting();
 }
 

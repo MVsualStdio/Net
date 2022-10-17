@@ -9,7 +9,8 @@ namespace Net{
             enum HttpStatusCode{
                 KUnknow,
                 K200Ok = 200,
-                K404NotFound = 404
+                K404NotFound = 404,
+                K302Found = 302
             };
         private:
             bool closeConnection_;

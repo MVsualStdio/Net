@@ -32,6 +32,7 @@ namespace Net
                 delete buffer;
             }
             const char* peek() const{ return buffer+readPos;}
+            const char* end() const{ return buffer+writePos;}
             void retrieve(int len);
             void retrieveUntil(const char* newRead);
             int getUnreadSize();

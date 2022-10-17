@@ -16,6 +16,7 @@
 #include "Channel.hpp"
 #include "../Buffer/Buffer.hpp"
 #include "IMuduoUser.hpp"
+#include "../Http/HttpContext.hpp"
 namespace Net{
     class Tcpserver;
     class Connectserver : public ServerIO{
@@ -28,9 +29,12 @@ namespace Net{
             int getFd(){ return socketfd;}
             void serverClose();
             void Coninit();
+            std::shared_ptr<HttpContext> getHttpState(){return state;};
+            void setHttpState(std::shared_ptr<HttpContext> state_){state =  state_;};
             void setUser(IMuduoUser* _user){user = _user;}
             void connectEstablished();
         private:
+            std::shared_ptr<HttpContext> state;
             int socketfd;
             std::shared_ptr<Epolloop> loop;
             Net::Channel* channel; 

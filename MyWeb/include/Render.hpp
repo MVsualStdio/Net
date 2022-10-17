@@ -25,7 +25,8 @@ namespace web{
             static const map<Net::HttpResponse::HttpStatusCode, string> ERROR_ACCESS_PATH;
             Render() = default;
             static std::shared_ptr<Net::HttpResponse> SendHtml(string path);
-           
+            static std::shared_ptr<Net::HttpResponse> SendContent(string content);
+            static std::shared_ptr<Net::HttpResponse> sendRedirect(string path);
     };
 }
 

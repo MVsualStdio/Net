@@ -20,6 +20,7 @@ namespace web{
         public:
         private:
             std::shared_ptr<Net::HttpResponse> onRequest(const HttpRequest& req){
+                //std::cout << "Headers " << req.methodString() << " " << req.path() << std::endl;
                 string path = req.path();
                 if(Route::isExistRoute(path)){
                     Response s =  Route::getResponse(path);

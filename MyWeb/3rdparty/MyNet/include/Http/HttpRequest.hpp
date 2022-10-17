@@ -11,7 +11,7 @@
 #ifndef HTTPREQUEST_H
 #define HTTPREQUEST_H
 
-
+#include <iostream>
 #include <map>
 #include <assert.h>
 #include <stdio.h>
@@ -107,8 +107,8 @@ namespace Net{
         return query_; 
     }
 
-    void setPostBody(const char* start){
-        postbody_.assign(start);
+    void setPostBody(const char* start,const char* end){
+        postbody_.assign(start,end);
     }
 
     const std::string& postBody() const{ 

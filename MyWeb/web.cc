@@ -25,8 +25,22 @@ using namespace Net;
 //     }
 // }
 
+std::shared_ptr<HttpResponse> login(HttpRequest& req){
+    if(req.method() == HttpRequest::Method::kPost & req.postBody() == "u=4&p=4"){
+        std::cout<<"req:"<<req.postBody()<<std::endl;
+        // std::shared_ptr<HttpResponse> rsp(new HttpResponse(true));
+        return Render::sendRedirect("/welcome.html");
+    }
+    return Render::SendHtml("/login.html");
+}
+
+
+
+
 int main(){
     WebSever web;
-    web.addRoute("/",Response([](HttpRequest& resp){return Render::SendHtml("login.html");}));
+    web.addRoute("/",Response(login));
+    web.addRoute("/ppp0",Response([](HttpRequest& resp){return Render::SendContent("/login.html");}));
+    web.addRoute("/welcome",Response([](HttpRequest& resp){return Render::SendHtml("/welcome.html");}));
     web.start();
 }

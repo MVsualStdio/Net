@@ -31,6 +31,10 @@ namespace Net{
             return request_; 
         }
 
+        const HttpRequestParseState state() const{ 
+            return state_; 
+        }
+
         HttpRequest& request(){ 
             return request_; 
         }
@@ -39,6 +43,7 @@ namespace Net{
             bool processRequestLine(const char* begin, const char* end);
             HttpRequestParseState state_;
             HttpRequest request_;
+            int  body_lenth;
     };
 }
 

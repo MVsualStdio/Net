@@ -140,6 +140,13 @@ int Buffer::readConnect(Connectserver* con){
     }
     char line[MAX_LINE];
     bzero(line, MAX_LINE);
+    char buff[65535];
+    struct iovec iov[2];
+    iov[0].iov_base = line;
+    iov[0].iov_len = sizeof(line);
+    iov[1].iov_base = buff;
+    iov[1].iov_len = sizeof(buff);
+
     ssize_t read_length = ::read(socketfd, line, MAX_LINE);
 
     if(read_length < 0) {
@@ -148,12 +155,12 @@ int Buffer::readConnect(Connectserver* con){
             return -1;
         } 
     } 
-    else if(read_length == 0) {
-        LogDebug(Net::Logger::MESSAGE) <<"Client Connection closed: " << socketfd;
-        return 0;
+
+    writeBuffer(line,read_length);
+    if(read_length > MAX_LINE){
+        writeBuffer(buff,read_length-MAX_LINE);
     }
-    return writeBuffer(line,read_length);
-    
+    return read_length;
 }
 
 

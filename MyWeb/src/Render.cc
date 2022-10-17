@@ -124,3 +124,43 @@ void Render::setResp(std::shared_ptr<Net::HttpResponse> resp){
         resp->setBody(buffer_);
     }
 }
+
+
+std::shared_ptr<Net::HttpResponse> Render::SendContent(string content){
+    std::shared_ptr<Net::HttpResponse> resp(new Net::HttpResponse(true));
+    resp->setStatusCode(HttpResponse::K200Ok);
+    resp->setStatusMessage("OK");
+    resp->setContentType("text/html");
+    resp->setBody(content);
+    return resp;
+}
+
+std::shared_ptr<Net::HttpResponse> Render::sendRedirect(string path){
+    std::shared_ptr<Net::HttpResponse> resp(new Net::HttpResponse(true));
+    path_ = path;
+    auto pos = path_.find('.');
+    if(pos != path_.length()){
+        std::string suffix(path_.begin()+pos,path_.end());
+        auto iter = SUFFIX_TYPE.find(suffix);
+        if(iter != SUFFIX_TYPE.end()){
+            pathType_ = iter->second;
+        }
+    }
+    if(buffer_){
+        UnmapFile();
+    }
+    string openPath ;
+    getPath(openPath);
+    filefd_ = mmapFile(openPath);
+
+    resp->setStatusCode(HttpResponse::K302Found);
+    resp->setStatusMessage("Found");
+    resp->setContentType(pathType_);
+    // std::cout<<"123"<<(string(path.begin(),path.begin()+pos))<<std::endl;
+    resp->addHeader("Location",string(path_.begin(),path_.begin()+pos));
+    resp->setBody(buffer_);
+
+    close(filefd_);
+    UnmapFile();
+    return resp;
+}
